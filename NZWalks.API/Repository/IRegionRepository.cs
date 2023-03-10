@@ -1,9 +1,12 @@
-﻿using NZWalks.API.Models.Domain;
+﻿using NZWalks.API.Controllers;
+using NZWalks.API.Models.Domain;
 
 namespace NZWalks.API.Repository
 {
     public interface IRegionRepository
     {
-        IEnumerable<Region> Getall();
+        Task<IEnumerable<Region>> GetallAsync();
+        Task<Region>GetAsync(Guid id);
+        Task <Region>AddAsync(Region region);
     }
 }

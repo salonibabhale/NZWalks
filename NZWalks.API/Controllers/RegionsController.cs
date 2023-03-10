@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using NZWalks.API.Models.DTO;
 using NZWalks.API.Repository;
 
 namespace NZWalks.API.Controllers
@@ -14,6 +15,7 @@ namespace NZWalks.API.Controllers
         public RegionsController(IRegionRepository regionRepository IMapper mapper)
         {
             this.regionRepository = regionRepository;
+            this.mapper = mapper;
         }
 
         public object Code { get; private set; }
@@ -24,9 +26,10 @@ namespace NZWalks.API.Controllers
         public object Population { get; private set; }
 
         [HttpGet]
-        public IActionResult GetAllRegions()
+        public async Task<IActionResult> GetAllRegionsAsync()
+
         {
-            var regions = regionRepository.Getall();
+            var regions = await regionRepository.GetAllasync();
 
             //return DTO regions
             //var regionsDTO = new List<Models.DTO.Region>();
@@ -48,6 +51,35 @@ namespace NZWalks.API.Controllers
             var regionsDTO = mapper.Map<List<Models.DTO.Region>>(regions);
 
             return Ok(regionsDTO);
+        }
+
+        [HttpGet]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetRegionAsync(Guid id)
+        {
+            var region = await regionRepository.GetAsync(id);
+
+            if (region == null)
+            {
+                return NotFound();
+            }
+            var regionDTO = mapper.Map<Models.DTO.Region>(region);
+
+            return Ok(regionDTO);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRegionAsync(Models.DTO.AddRegionRequest AddRegionRequest);
+        {
+         //Request(DTO) to Domain model
+         var region = new Models.Domain.Region()
+         {
+
+         }
+
+         //pass detail to Repository 
+
+        //Convert back to DTO
         }
     }
 }
